@@ -1,0 +1,31 @@
+﻿
+drop table if exists shop_user;
+drop table if exists sys_info;
+drop table if exists category;
+drop table if exists products;
+drop table if exists sales_info;
+drop table if exists applications;
+
+
+create table shop_user(id unique,password,name);
+
+create table sys_info(sv_url varchar(255),catalogue_ver varchar(10),download_date varchar(10));
+
+create table category(id unique,categoryname,parentid);
+create table products(product_id int unique,product_name varchar(50),category_id int,category_name varchar(20),
+	rank varchar(10),status int,product_flag varchar(10),product_code varchar(20),main_list_image varchar(50),
+	main_image varchar(50),main_large_image varchar(50),sub_image1 varchar(50),sub_image2 varchar(50),sub_image3 varchar(50),
+	sub_image4 varchar(50),sub_image5 varchar(50),sub_large_image1 varchar(50),sub_large_image2 varchar(50),
+	sub_large_image3 varchar(50),sub_large_image4 varchar(50),sub_large_image5 varchar(50),point_rate varchar(50),
+	class_category_name varchar(50),price01 varchar(10),price02 varchar(10),
+	pgcount int,file1 varchar(50),file2 varchar(50),file3 varchar(50),file4 varchar(50),file5 varchar(50),file6 varchar(50),
+	page1 text,page2 text,page3 text,page4 text,page5 text,page6 text,time varchar(50));
+
+create table sales_info( info_id int,time varchar(10),title varchar(255),is_shop int,content varchar(255),limit_date varchar(50));
+
+
+create table applications( app_id unique,time,app_name,display);
+
+
+insert into sys_info(sv_url,catalogue_ver,download_date) values('http://jef-net.sakura.ne.jp','1.0','2011/06/24');
+insert into shop_user(id,password,name) values('user2','user2','User No 2');

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="extensions/|datatables/unit_testing/tests_onhold/3_ajax/|js/|datatables/unit_testing/tests_onhold/1_dom/|datatables/unit_testing/|jqtouch/|datatables/js/|datatables/unit_testing/tests_onhold/2_js/|datatables/unit_testing/tests_onhold/4_server-side/|datatables/unit_testing/tests/1_dom/" kind="src" path=""/>
+	<classpathentry kind="src" path="datatables/js"/>
+	<classpathentry excluding="tests_onhold/3_ajax/|tests_onhold/1_dom/|tests_onhold/2_js/|tests_onhold/4_server-side/|tests/1_dom/" kind="src" path="datatables/unit_testing"/>
+	<classpathentry kind="src" path="datatables/unit_testing/tests_onhold/1_dom"/>
+	<classpathentry kind="src" path="datatables/unit_testing/tests_onhold/2_js"/>
+	<classpathentry kind="src" path="datatables/unit_testing/tests_onhold/3_ajax"/>
+	<classpathentry kind="src" path="datatables/unit_testing/tests_onhold/4_server-side"/>
+	<classpathentry kind="src" path="datatables/unit_testing/tests/1_dom"/>
+	<classpathentry kind="src" path="extensions"/>
+	<classpathentry kind="src" path="jqtouch"/>
+	<classpathentry kind="src" path="js"/>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path=""/>
+</classpath>

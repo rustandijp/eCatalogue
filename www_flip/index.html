@@ -1,0 +1,568 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" manifest="listfiles.manifest">
+<head>
+<meta name="viewport" content="height=924px,width=758px, minimum-scale=1.0, maximum-scale=1.0" http-equiv="content-type" content="text/html; charset=utf-8">
+<title>iCatalogueV1</title>
+<link rel="stylesheet" href="css/anim.css" />
+<link rel="stylesheet" href="css/anim2.css" />
+<link rel="stylesheet" href="css/closebook.css" />
+<link rel="stylesheet" href="css/tpl_single.css" />
+<link rel="stylesheet" href="css/tpl_group.css" />
+<link rel="stylesheet" href="css/tpl_detail.css" />
+<link rel="stylesheet" href="css/page.css" />
+<link rel="stylesheet" href="css/jquery-ui.css" />
+<style type="text/css" media="screen">@import "jqtouch/jqtouch.min.css";</style>
+<style type="text/css" media="screen">@import "themes/jqt/theme.min.css";</style>
+<style type="text/css" media="screen">@import "css/main.css";</style>
+<style type="text/css" media="screen">@import url(css/video-js.css);</style>
+<style type="text/css" title="currentStyle">
+	@import "datatables/css/demo_table_jui.css";
+	.ui-progressbar-value { background-image: url(images/pbar-ani.gif); }
+	.currency {
+		text-align:right;
+		width : 80px;
+	}
+	.setting{
+		text-align : left;
+		width : 50px;
+	}	
+	.category{
+		width : 100px;
+	}
+	.product_name{
+		width : 200px;
+	}
+	.product_id{
+		width : 80px;
+	}
+	#example_filter{
+		display:none;
+	}
+	#example_length{
+		display:none;
+	}
+</style>
+
+<script src="js/video.js" type="text/javascript"></script>
+<script src="phonegap.0.9.5.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="jqtouch/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script> 
+<script src="jqtouch/jqtouch.min.js" type="application/x-javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8" src="pixFileDownload.js"></script>
+<script type="text/javascript" language="javascript" src="datatables/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript" src="js/jquery-ui.min.js" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8" src="js/media.js"></script>
+<script type="text/javascript" src="js/filecontrol.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/dbconn.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/icatalogmodel.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/icatalog.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/json2.js" charset="utf-8"></script>
+      
+	<script type="text/javascript">
+	 var catalog = null;
+	 var dbconn = null;
+	 var model = null;
+	 // Fire up JQTouch
+	VideoJS.setupAllWhenReady();
+	
+	
+	var jQT = $.jQTouch({
+		statusBar: 'black-translucent',
+		preloadImages: [
+			'themes/jqt/img/chevron_white.png',
+			'themes/jqt/img/bg_row_select.gif',
+			'themes/jqt/img/back_button_clicked.png',
+			'themes/jqt/img/button_clicked.png'
+			],
+		addGlossToIcon:true,
+		touchSelector: 'a, .touchable', 
+		submitSelector : '.submit'
+	});	  
+	
+	if (typeof(PhoneGap) != 'undefined') { 
+		//alert('OOO');
+        $('body > #index').css({bottom: '20px !important'}); 
+	} 	
+
+	function animright() {
+		stopAudio();
+	    catalog.prev();
+	}
+	
+	function animleft() {
+		stopAudio();
+		catalog.next();
+	  }
+	  
+	function gotoPage(page2go){
+		catalog.gotoPage(page2go);
+	}
+	
+
+	
+	
+	$(function(){	
+		$("#progressbar").progressbar('disable');		
+		$('.okonomipage').tap(function(e) {
+		    //catalog.insertToCart();
+			catalog.showDiv("okonomi");
+		});
+		$('.addtocart').tap(function(e) {
+		    catalog.insertToCart();
+			//catalog.showDiv("okonomi");
+		});
+		$('.backpage').tap(function(e) {
+			//catalog.showDiv("ipad");
+			jQT.goBack();
+		});
+		$('.ipadpage').tap(function(e) {
+			catalog.showDiv("ipad");
+		});
+	    $('.indexpage').tap(function(e){
+		    catalog.showDiv("index");
+			//catalog.reset();
+		});
+		$('.bookmark').tap(function(e) {
+			catalog.showDiv("index");
+		});
+		$('.settingpage').tap(function(e,info){
+		  if(catalog.isFirstTime()){
+				catalog.showDiv("setting");
+			}else
+				catalog.showDiv("login");
+		});
+		$('.productsetting').tap(function(e){
+			catalog.showDiv("product_setting");	
+			reloadProductSetting();
+		});
+		
+		
+		$('#setting_submit').submit(function(e,info) {
+			var userid = $("#shop_userid").val();
+			var password = $("#shop_password").val();
+			var name = $("#shop_shopname").val();
+			var url = $("#shop_serverurl").val();
+			catalog.setSettingData(userid,password,name,url);
+		});
+		
+		
+		$('#firstbutton').tap(function(e){
+			stopAllMedia();
+		    catalog.prevproduct();
+		});
+		$('#lastbutton').tap(function(e){
+			stopAllMedia();
+			catalog.nextproduct();
+		});
+		$('#nextbutton').tap(function(e){
+		    stopAllMedia();
+		    catalog.next();
+		});
+		$('#backbutton').tap(function(e){
+			stopAllMedia();
+			catalog.prev();
+		});
+		$('.resetbutton').tap(function(e){
+			document.location = 'index.html';
+		});
+		$('#indexnextbutton').tap(function(e){
+		    catalog.nextindex();
+		});
+		$('#indexbackbutton').tap(function(e){
+			catalog.previndex();
+		});
+		$('#download').tap(function(e) {
+			catalog.downloadCatalog();
+		});
+		$('#product_setting_submit').tap(function(e){
+			for(var i=0;i<catalog.products.length;i++){
+				var checktemp = document.getElementById('check'+i);
+				catalog.products[i].status=2;
+				if(checktemp.checked==false){
+					catalog.products[i].status=0;
+				}
+				
+				//alert(checktemp.checked +' :' +catalog.products[i].status);
+			}
+			catalog.saveContent();
+			navigator.notification.alert('商品設定保存されました',function(button){
+				catalog.loadCatalog(true);
+			},'情報','OK');
+		  });
+		$('#shoplogin_submit').tap(function(e,info) {
+			var passwd = $("#login_password").val();
+			if(!catalog.shoplogin(passwd)){
+				navigator.notification.alert('パスワードが間違っています',function(button){},'情報','OK');
+			}else	
+				catalog.showDiv('setting');
+		});
+		
+				
+	//Product Setting Page	
+	});
+	
+	function removeFromCart(index){
+		catalog.removeCart(index);
+	}
+	
+	function hideLoading(){
+		$('.loading').html("<img src='images/loading.gif'/>");
+	}
+	
+	function showLoading(){
+		$('.loading').html("<img src='images/loading.gif'/>");
+	}
+	
+	function reloadProductSetting(){
+		var datatableArr = new Array();
+		if(catalog.products!=null){
+			for(var i=0;i<catalog.products.length;i++){
+				var item = new Array();
+				//alert(catalog.products[i].product_name +':'+catalog.products[i].status);
+				var ischecked = catalog.products[i].status==0 ? '': 'checked';
+		　		item.push("<input type='checkbox' id='check"+ i +"' value='"+ i+"' "+ ischecked +">");
+				item.push(catalog.products[i].category_name);
+				item.push(catalog.products[i].product_name);
+				item.push(catalog.products[i].product_code);
+				item.push(addCommas(catalog.products[i].price01) +'円');
+				item.push(addCommas(catalog.products[i].price02) +'円');
+				datatableArr.push(item);
+			}
+		}
+		//console.log('DISPLAY PRODUCT SETTING TABLE');
+		$('#product_table').html( '<table class="tableCart display" width="750px" id="example"></table>' );
+		$('#example').dataTable( {
+			"aaData": datatableArr,"bSearchable":false,"aLengthMenu":10,
+			"aoColumns": [
+				{ "sTitle": "表示","sClass": "setting"},
+				{ "sTitle": "カテゴリ","sClass": "category"},
+				{ "sTitle": "商品名","sClass" : "product_name"},
+				{ "sTitle": "商品コード", "sClass": "product_id" },
+				{ "sTitle": "通常", "sClass": "currency" },
+				{ "sTitle": "価格", "sClass": "currency"}
+				]
+		});	
+	}
+	function onLoad() {
+        document.addEventListener("deviceready", onDeviceReady, false);
+    }
+	
+	jQuery(document).ready(function(){
+		onDeviceReady();
+	});
+	
+	function onDeviceReady() {
+		catalog = new icatalog(window);
+		dbconn = new DBConn();
+		dbconn.window = window;
+		dbconn.dbName= 'icatalogue';
+		dbconn.scripts = catalog.loadDBScript();
+		
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, 
+		function(system){
+				 filesystem = system;
+		});		
+		dbconn.openDB();
+		catalog.showDiv('cover');
+		catalog.mydb = dbconn;
+		catalog.init(dbconn);	
+		if(catalog.isFirstTime()){
+			catalog.showDiv('setting');
+		}else{
+			catalog.showDiv('index');
+		}	
+	}
+
+	
+	
+	function play() {
+		var animArr = new Array("img_zoom","img_rotate","img_zoomnskew","img_opaque","img_wipe","img_peak");
+		for(var j=0;j<animArr.length;j++){			
+			var animatedEls = document.getElementsByClassName(animArr[j]);
+			
+			for (var i = animatedEls.length - 1; i >= 0; i--){
+				if(animatedEls[i].style.webkitAnimationPlayState == "running"){				
+					setTimeout(function(){
+						animatedEls[i].style.webkitAnimationPlayState = "paused";	
+					},10000);
+				}
+				animatedEls[i].style.webkitAnimationPlayState = "running";	
+			};
+			
+		}
+	}
+	
+
+	
+</script>
+
+</head>
+	<body onload="onLoad();">
+		<div id="ipad">
+			<div class="toolbar">
+                <h1 id='title'>商品</h1>
+				<a class="buttonUpRight addtocart" href="#">お好みに入れる</a>			
+            </div>	
+			<div id="page">
+				<!--<div id="fade" class="black_overlay"></div>-->
+				<div id="animation" class='bgRegister'>
+					<div id="AN-sObj-stage">
+						<div id="AN-sObj-1" class="AN-Object"> 
+							<span id="AN-sObj-val-1"></span>			
+							<div class="AN-Object" id="AN-sObj-2">
+								<div id="AN-sObj-val-2">
+									<div id="coverfix">
+									<img src="images/cover.png">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="animleft">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer">
+				<ul class='navi_left' id='navi'>
+					<li id='menu_index_page'><a href="#" class="okonomipage touchable" >Add to Cart</a></li>
+					<li id='menu_list_page'><a href="#" class="indexpage touchable" >目次</a></li>
+					<li id='menu_page_top'><a href="#" class="firstbutton touchable" id='firstbutton' >最初</a></li>
+					<li id='menu_page_prev'><a href="#" class='backbutton touchable' id='backbutton' >戻る</a></li>
+					<li id='menu_page_next'><a id='nextbutton' class='touchable' href="#">次へ</a></li>
+					<li id='menu_page_last'><a href="#" class="lastbutton touchable" id='lastbutton' >最後</a></li>			
+				</ul>
+				<div class='pageinfo'>ページ:<span id='pageno'>１</span></div>
+			</div>
+		</div>
+		<div id="cover" class="current">
+			<div class="toolbar">
+					<h1>Bondへようこそ</h1>
+			</div>
+			<img src="images/cover.png">
+		</div>
+		<div id="loading"><img src='images/ajax-loader.gif' alt='Please Wait!'></div>
+		<div id="index" >
+			<div class="toolbar">
+                <h1>目次</h1>
+                <a class="buttonUpLeft settingpage" href='#'>設定</a>				
+            </div>
+			<div id="page">
+				<div class="bgRegister">
+						<div class="newsFlash" style='top:100px;margin-left:130px;position:relative'></div>
+						<div class="formContent">
+						<div class="titlePage">目次</div>
+						<ul class="formIsi" id='category'>	</ul>
+					</div>
+				</div><!---->
+			</div><!-- page-->
+			<div class="footer">
+				<ul class='navi_left' id='indexnavi'>
+					<li id='menu_page_prev'><a href="#" class='backbutton touchable' id='indexbackbutton' >戻る</a></li>
+					<li id='menu_page_next'><a id='indexnextbutton' class='touchable' href="#">次へ</a></li>
+				</ul>
+			</div>
+		</div>
+		<div id="setting">
+			<div class="toolbar">
+                <h1>基本設定</h1>
+                <a class="buttonUpLeft indexpage" href="#" >目次</a>
+				<a class="buttonUpRight productsetting" href="#">進む</a>				
+            </div>	
+			<div id="page">
+				<div class="bgRegister">
+				<div class="formSetting">
+				    <div class="newsFlash">
+					</div>
+					<div class="titlePage">基本設定</div>
+					<div class="clear"></div>
+					<div class="settingPage">
+					<form id='setting_submit' action=''>
+						<table class="tableSetting">
+							<tr>
+								<td width="150px">ユーザID</td>
+								<td width="10px">:</td>
+								<td width="50px">
+									<div class="textformSetting"><input type="text" value="" id='shop_userid' class="textfield" /></div>
+								</td>
+							</tr>
+							<tr>
+								<td>パスワード</td>
+								<td>:</td>
+								<td>
+									<div class="textformSetting"><input type="password" id='shop_password' value="" class="textfield" /></div>
+								</td>
+							</tr>
+							<tr>
+								<td>サーバURL</td>
+								<td>:</td>
+								<td>
+									<div class="textformSetting"><input type="text" id='shop_serverurl' value="" class="textfield" /></div>
+								</td>
+
+							</tr>
+							<tr>
+								<td>ショップ名</td>
+								<td>:</td>
+								<td>
+									<div class="textformSetting"><input type="text" id='shop_shopname' value="" class="textfield" /></div>
+								</td>
+
+							</tr>					
+							<tr>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+								<td><input type="image" class="submit" alt="submit"  src="images/buttsetting.png"/>
+								</td>
+
+							</tr>					
+						</table>
+					</form>
+					</div>
+
+				</div>
+			</div><!---->
+		</div><!-- page-->
+			<div class="footer">
+				<div class='reset'><a class="resetbutton" href="#">リセット</a></div>
+			</div>
+		</div>
+		<div id="product_setting">
+		    <div class="toolbar">
+                <a class="buttonUpLeft backpage"  href="#">戻る</a>
+				<a class="buttonUpRight indexpage" href="#">進む</a>
+				<h1>商品設定</h1>				
+            </div>	
+			<div id="page">
+				<div class="bgRegister">
+					<div class="newsFlash" style='top:100px;margin-left:130px;position:relative'>
+					</div>
+					<div class="formRegister" style='position:relative;left:0px;margin:0;top:90px;width:750px'>
+					<div class="titlePage">商品設定</div>
+					<div id="product_table" class="cartPage"></div>
+					<div class="submitLogin"><p><a id="download" href="#"><img class='touchable'  src="images/download.png"/></a> | <a id="product_setting_submit" href="#"><img class='touchable' src="images/buttsetting.png"/></a></p>
+					<div style='color:blue;display:none' id='download_progress'></div>
+					<div class="ui-progressbar ui-widget ui-widget-content ui-corner-all" id="progressbar"></div>
+					</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer">
+				<div class='reset'><a class="resetbutton" href="#">リセット</a></div>	
+			</div>
+		</div>
+		<div id="login" selected="true" >
+           <div class="toolbar">
+                <a class="buttonUpLeft indexpage"  href="#">目次</a>
+				 <h1>Bondへようこそ</h1>				
+            </div>		
+				<div id="page">
+					<div class="bgLogin">
+						<div class="formLogin">
+						<form id='shoplogin_submit'>
+						<!--
+							<div class="textform">
+								<input type="text" value="USERNAME" name="s" class="textfield" id="login_username" onfocus="if (this.value == 'USERNAME') {this.value = '';}" onblur="if (this.value == '') {this.value = 'USERNAME';}" />
+							</div>
+						-->
+							<input type="hidden" name="s" value="user1" id="login_username">
+							<div class="textform">
+							<input type="password" value="PASSWORD" name="s" class="textfield" id="login_password" /></div>
+							<div class="submitLogin"><span><input type="image" src="images/buttlogin.png" alt="LOGIN" class="touchable" /></span> </div>
+						</form>
+						</div>
+					</div>
+				</div><!-- tpl_single-->
+				<div class="footer">
+			</div>
+		</div>
+		<div id="okonomi">
+			<div class="toolbar">
+                <a class="buttonUpLeft ipadpage"  href="#">戻る</a>
+                <h1>お好み</h1>				
+            </div>	
+			<div id="page">
+			<div class="bgRegister">
+					<div class="formInquiry">
+						<div class="titlePage">お好み</div>
+						<div class="contentPage">
+							<div class="leftContentPage"><p>
+								商品をご購入の場合は、携帯電話で右のマークを撮影してブラウザへ進んでください。<br>そして店頭で支払いを行い、商品を受け取ってください。
+<br>携帯電話をお持ちでない場合は、<a target='_blank' id='buy_link' href="#">こちら</a>から登録してください。</p>
+							</div>
+							<div class="rightContentPage">
+								<img id='qrcode_image' src="images/qr-code.png"/>
+							</div>
+						</div>
+						<div class="clear"></div>
+						<div class="cartPage">
+							<table class="tableCart" id='okonomiList'>
+								<tr class="headTableCart">
+									<td width="50px">商品ID　</td>
+									<td width="200px">商品名</td>
+									<td width="100px">単価</td>
+									<td width="50px">削除</td>
+								</tr>	
+							</table>
+						
+						</div>
+
+					</div>
+				</div><!---->
+			</div><!-- page-->
+			<div class="footer">
+				<ul class='buttonGroup'>
+				</ul>		
+			</div>
+		</div>
+		<div id="userlogin" selected="true" >
+           <div class="toolbar">
+                <a class="buttonUpLeft ipadpage"  href="#">戻る</a>
+                <h1>Bondへようこそ</h1>				
+            </div>		
+            <form>
+				<div id="page">
+					<div class="bgLogin">
+						<div class="formLogin">
+							<div class="textform">
+								<input type="text" value="USERNAME" name="s" class="textfield" id="customer_username" onfocus="if (this.value == 'USERNAME') {this.value = '';}" onblur="if (this.value == '') {this.value = 'USERNAME';}" />
+							</div>
+							<input type="hidden" name="s" value="user1" id="login_username">
+							<div class="textform">
+							<input type="password" value="PASSWORD" name="s" class="textfield" id="customer_password" onfocus="if (this.value == 'PASSWORD') {this.value = '';}" onblur="if (this.value == '') {this.value = 'PASSWORD';}" /></div>
+							<div class="submitLogin"><span><a href="#" id="custlogin_submit"><img src="images/buttlogin.png"/></a></span> </div>
+							<br><br>
+							<div class="submitLogin"><p><span><a href="#" id="registerbutton">新規登録の場合はこちら</a></span> </p>
+							<p><span><a href="#" id="forgetpasswordbutton">パスワードを忘れた方はこちら</a></span></p></div>
+						</div>
+					</div>
+				</div><!-- tpl_single-->
+            </form>
+		</div>
+		<div id="confirmation">
+			<div class="toolbar">
+                <a class="buttonUpLeft okonomipage"  href="#">戻る</a>
+                <h1>Bondへようこそ</h1>				
+            </div>	
+			<div id="page">
+			<div class="bgRegister">
+					<div class="formInquiry">
+						<div class="titlePage">お好み</div>
+						<div class="clear"></div>
+						<div class="cartPage">
+							<table class="tableCart" id='okonomiList'>
+								<tr class="headTableCart">
+									<td width="50px">商品ID　</td>
+									<td width="200px">商品名</td>
+									<td width="100px">単価</td>
+									<td width="10px">削除</td>
+								</tr>	
+							</table>
+						</div>
+					</div>
+				</div><!---->
+			</div><!-- page-->
+		</div>		
+	</body>
+</html>
+
+

@@ -1,0 +1,271 @@
+
+#page .titlePage
+{
+	font-size:35px;
+	font-family:"MyriadPro",Verdana, Arial, Helvetica, sans-serif;
+	color:#B2193E;
+	position:relative;
+	margin-bottom:5px; 
+}
+
+#page
+{
+	padding: 0;
+	height:924px;
+	width:758px;
+}
+/*----------------CSS LOGIN----------------*/
+#page .bgLogin {
+	width:758px;
+	height:924px;
+	background-image:url(../images/loginbg.png);
+	position:relative;
+}
+#page .formLogin
+{
+	width:450px;
+	height:100px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+	margin:200px 0 0 300px;
+	position:absolute;
+}
+#page .textform
+{
+	width: 418px;
+	height: 40px;
+	background: url(../images/textfieldbg.png) no-repeat;
+	border: none;
+	position:relative;
+	margin-bottom:10px;
+}
+
+#page .submitLogin
+{
+	position:relative;
+	text-transform:uppercase;
+	color:#ffffff;
+}
+.submitLogin a
+{
+	color:#ffffff;
+	text-decoration:none;
+}
+.submitLogin a:hover
+{
+	font-weight:bold;
+}
+
+/*----------------CSS REGISTER----------------*/
+#page .bgRegister {
+	width:758px;
+	height:924px;
+	background-image:url(../images/registerbg.png);
+	position:relative;
+}
+#page .formRegister
+{
+	top:200px;
+	left:90px;
+	width:418px;
+	height:400px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+	margin:50px 0 0 100px;
+	position:absolute;
+}
+
+.submitRegister
+{
+	position:relative;
+	text-transform:uppercase;
+	color:#363636;
+	right:0;
+}
+.submitRegister a
+{
+	color:#363636;
+	text-decoration:none;
+}
+.submitRegister a:hover
+{
+	font-weight:bold;
+}
+
+.textfield
+{
+	font-size:12px;
+	width: 408px;
+	height: 40px;
+	border: none;
+	left:10px;
+	position:absolute;
+	background: none;
+}
+
+/*----------------formContent---------------*/
+#page .formContent{
+	width:518px;
+	height:400px;
+	font-size:20px;
+	font-family:"MyriadPro",Verdana, Arial, Helvetica, sans-serif;
+	margin:100px 0 0 100px;
+	position:absolute;
+}
+#page .formContent ul
+{
+	list-style:none;
+	margin:0;
+	padding:0;	
+	border:none;
+	background:none;
+}
+#page .formContent ul li a:hover
+{
+	background:#B2193E;
+	color:#ffffff;
+	
+}
+#page .formContent ul li a
+{
+	display:block;
+	cursor:pointer;
+	padding:10px 10px;
+	text-decoration:none;
+	background:#D8015F;
+	color:#ffffff;
+	margin:0 0 2px 0;
+}
+#page .formContent ul li ul
+{
+	padding:0 0 0 20px;
+}
+#page .formContent ul li ul li a
+{
+	background:#D8015F;
+}
+
+#page .linkPage{
+	width:600px;
+	position:relative;
+	margin-right:10px;
+	margin-top:10px;
+	
+}
+#page .linkPage a
+{
+	display:block;
+	cursor:pointer;
+	padding:5px 10px;
+	text-decoration:none;
+	background:#B2193E;
+	color:#ffffff;
+}
+
+#page .linkPage a:hover
+{
+	background:#BE143D;
+	color:#ffffff;
+}
+
+/*---------------- INQUIRY PAGE ---------------*/
+#page .formInquiry{
+	width:560px;
+	font-family:"MyriadPro",Verdana, Arial, Helvetica, sans-serif;
+	margin:100px 0 0 100px;
+	position:absolute;
+}
+
+#page .contentPage
+{
+	font-size:18px;
+}
+#page .leftContentPage
+{
+	width:415px;
+	float:left;
+	margin-right:10px;
+
+}
+#page .rightContentPage
+{
+	width:135px;
+	float:left;
+}
+#page .cartPage
+{
+	margin-top:20px;
+}
+#page table.tableCart
+{
+	border:1px solid #E2E2E2;
+	width:100%;
+	border-collapse: collapse;
+	border-spacing: 0px;
+	background:#F6F6F6;
+	
+}
+#page table.tableCart tr.headTableCart 
+{
+	color:#ffffff;
+	text-align:center;
+	background:#b2193e
+	
+}
+#page table.tableCart tr td
+{
+	border:1px solid #E2E2E2;
+	padding:5px;
+}
+
+/*---------------- SETTING PAGE ---------------*/
+#page .formSetting{
+	width:560px;
+	font-family:"MyriadPro",Verdana, Arial, Helvetica, sans-serif;
+	margin:100px 0 0 100px;
+	position:absolute;
+}
+
+#page .newsFlash
+{
+}
+#page .newsFlash p
+{
+	width:540px;
+	padding:10px;
+	border:1px solid #8E8E8E;
+}
+
+#page .settingPage
+{
+	margin-top:20px;
+}
+#page .textformSetting
+{
+	width: 380px;
+	height: 40px;
+	background: url(../images/textfieldbg.png) no-repeat;
+	border: none;
+	margin-bottom:5px;
+	position:relative;
+}
+#page table.tableSetting
+{
+	width:100%;
+	border-collapse: collapse;
+	border-spacing: 0px;
+	font-size:20px;	
+}
+
+#page table.tableSetting tr td
+{
+	padding:5px;
+	vertical-align:middle;
+}
+
+/*---------------COVER FIX----------*/
+#coverfix
+{
+	position:relative;
+	margin:0 0 0 50px;
+}
